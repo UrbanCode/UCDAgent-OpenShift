@@ -1,0 +1,139 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: urbancode-deploy-agent
+  annotations:
+    openshift.io/display-name: "UrbanCode Deploy Agent"
+    openshift.io/provider-display-name: "HCL and IBM"
+    openshift.io/documentation-url: "https://www.ibm.com/support/knowledgecenter/en/SS4GSP_7.0.2/com.ibm.udeploy.doc/ucd_version_welcome.html" 
+    openshift.io/support-url: "https://www.ibm.com/support"
+    description:  "7.0.2.1"
+objects:
+- apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    generation: 3
+    labels:
+      app: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}
+  spec:
+    podManagementPolicy: OrderedReady
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: ${APPLICATION_NAME}
+    template:
+      metadata:
+        labels:
+          app: ${APPLICATION_NAME}
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: beta.kubernetes.io/arch
+                  operator: In
+                  values:
+                  - amd64
+        containers:
+        - env:
+          - name: RELAY_URI
+            value: ${RELAY_URI}
+          - name: CODESTATION_URL
+            value: ${CODESTATION_URL}
+          - name: SERVER_URI
+            value: ${SERVER_URI}
+          - name: AGENT_NAME
+            value: ${AGENT_NAME}
+          - name: AGENT_TEAMS
+            value: ${AGENT_TEAMS}
+          image: ${IMAGE_REPOSITORY}:${IMAGE_TAG}-x86_64
+          imagePullPolicy: ${IMAGE_PULL_POLICY}
+          name: ${APPLICATION_NAME}
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /opt/ibm-ucd/agent/configs
+            name: ${APPLICATION_NAME}-conf
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: ${APPLICATION_NAME}-conf
+          peristentVolumeClaim:
+            claimName: ${EXISTING_CLAIM_NAME}
+        dnsPolicy: ClusterFirst
+        imagePullSecrets:
+        - name: ${IMAGE_PULL_SECRET}
+    updateStrategy:
+      rollingUpdate:
+        partition: 0
+      type: RollingUpdate
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: ${APPLICATION_NAME}-conf
+    labels:
+      app: ${APPLICATION_NAME}
+  spec:
+    accessModes:
+      - "ReadWriteOnce"
+    resources:
+      requests:
+        storage: 10Mi
+parameters:
+  - name: APPLICATION_NAME
+    displayName: Application Name
+    description: Unique name for UrbanCode Deploy running in this project
+    value: ""
+    required: true
+  - name: IMAGE_REPOSITORY
+    displayName: Image repository
+    description: Name of image, including repository prefix (if required)
+    value: "ucd-server/ucda" 
+    required: true 
+  - name: IMAGE_TAG
+    displayName: Docker image tag
+    description: Docker image tag
+    value: "7.0.2.1.1013966"
+    required: true
+  - name: IMAGE_PULL_POLICY
+    displayName: Docker image pull policy
+    description: Image pull policy (Valid values are Always, Never or IfNotPresent)  Defaults to Always if latest tag is specified, or IfNotPresent otherwise
+    value: "Always"
+    required: true
+  - name: IMAGE_PULL_SECRET
+    displayName: Image pull secret
+    description: An image pull secret used to authenticate with the image registry
+    value: ""
+    required: false
+  - name: RELAY_URI
+    displayName: Agent Relay URI
+    description: "Configuration data if the agent is using a relay, in the form http://relay1:20080."
+    value: ""
+    required: false
+  - name: CODESTATION_URL
+    displayName: CodeStation URL
+    description: "Configuration data if the agent is using a relay, in the form https://relay1:20081."
+    value: ""
+    required: false
+  - name: SERVER_URI
+    description: "UCD server URI in the form wss://host:port."
+    value: ""
+    required: true
+  - name: AGENT_NAME
+    description: "Name of the Agent"
+    value: ""
+    required: false
+  - name: AGENT_TEAMS
+    description: "Teams to add this agent to when it connects to the UCD server.Format is <team>:<type>. Multiple team specifications are separated with a comma."
+    value: ""
+    required: false
+  - name: EXISTING_CLAIM_NAME
+    description:  "Name of persistent storage"
+    value: ""
+    required: false
