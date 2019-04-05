@@ -55,7 +55,7 @@ Kubernetes 1.9
 Use the following command to deploy the UCD Server to an OpenShift project:
 
 ```bash
-$ oc process -f https://raw.githubusercontent.com/IBM-UrbanCode/UCDAgent-OpenShift/master/ucda_template.yaml --param-file values.txt | oc create -f -
+$ oc process -f https://raw.githubusercontent.com/UrbanCode/UCDAgent-OpenShift/master/ucda_template.yaml --param-file values.txt | oc create -f -
 ```
 The above command uses the values.txt file to supply parameter values for the application deployment.
 Here is the example contents of a values.txt file:
