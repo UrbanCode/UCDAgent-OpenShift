@@ -91,7 +91,7 @@ The template uses the following parameter values that can be supplied in a separ
 | CODESTATION_URI | Configuration data if the agent is using a relay, in the form https://relay1:20081. | |
 | SERVER_URI | UCD server URI. If multiple servers are specified, separate them with commas. For example, random:(wss://ucd1.example.com:7919,wss://ucd2.example.com:7919) |  |
 | AGENT_NAME | Name of the agent | |
-| AGENT_TEAMS | Teams to add this agent to when it connects to the UCD server.Format is <team>:<type>. Multiple team specifications are separated with a comma. |  |
+| AGENT_TEAMS | Teams to add this agent to when it connects to the UCD server.  Format is "<team>:<type>". Multiple team specifications are separated with a comma. |  |
 
 ## Storage
 See the Prerequisites section of this page for storage information.
