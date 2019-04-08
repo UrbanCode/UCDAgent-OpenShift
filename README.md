@@ -81,20 +81,17 @@ The template uses the following parameter values that can be supplied in a separ
 
 | Qualifier | Parameter  | Definition | Allowed Value |
 |---|---|---|---|
-| application name |  | The name of the deployed application | |
-| image | pullPolicy | Image Pull Policy | Always, Never, or IfNotPresent. Defaults to Always if :latest tag is specified, or IfNotPresent otherwise  |
-|       | repository | Name of image, including repository prefix (if required) | See [Extended description of Docker tags](https://docs.docker.com/engine/reference/commandline/tag/#extended-description) |
-|       | tag | Docker image tag | See [Docker tag description](https://docs.docker.com/engine/reference/commandline/tag/) |
-|       | secret |  An image pull secret used to authenticate with the image registry | Empty (default) if no authentication is required to access the image registry. |
-| persistence | enabled | Determines if persistent storage will be used to hold the UCD server appdata directory contents. This should always be true to preserve server data on container restarts. | Default value "true" |
-|             | useDynamicProvisioning | Set to "true" if the cluster supports dynamic storage provisoning | Default value "false" |
-| confVolume | name | The base name used when the Persistent Volume and/or Persistent Volume Claim for the UCD agent conf directory is created by the chart. | Default value is "conf" |
-|               | existingClaimName | The name of an existing Persistent Volume Claim that references the Persistent Volume that will be used to hold the UCD agent conf directory. |  |
-|               | storageClassName | The name of the storage class to use when persistence.useDynamicProvisioning is set to "true". |  |
-|               | size | Size of the volume to hold the UCD agent conf directory |  |
-| relayUri |  | Agent relay URI if the agent is connecting to a relay. If multiple relays are specified, separate them with commas. For example, random:(http://relay1:20080,http://relay2:20080) |  |
-| serverUri |  | UCD server URI. If multiple servers are specified, separate them with commas. For example, random:(wss://ucd1.example.com:7919,wss://ucd2.example.com:7919) |  |
-| agentTeams |  | Teams to add this agent to when it connects to the UCD server.Format is <team>:<type>. Multiple team specifications are separated with a comma. |  |
+| APPLICATION_NAME |  | The name of the deployed application | |
+| image | IMAGE_PULL_POLICY | Image Pull Policy | Always, Never, or IfNotPresent. Defaults to Always if :latest tag is specified, or IfNotPresent otherwise  |
+|       | IMAGE_REPOSITORY | Name of image, including repository prefix (if required) | See [Extended description of Docker tags](https://docs.docker.com/engine/reference/commandline/tag/#extended-description) |
+|       | IMAGE_TAG | Docker image tag | See [Docker tag description](https://docs.docker.com/engine/reference/commandline/tag/) |
+|       | IMAGE_PULL_SECRET |  An image pull secret used to authenticate with the image registry | Empty (default) if no authentication is required to access the image registry. |
+| EXISTING_CLAIM_NAME | | The name of an existing Persistent Volume Claim that references the Persistent Volume that will be used to hold the UCD agent conf directory. |  |
+| RELAY_URI |  | Agent relay URI if the agent is connecting to a relay. If multiple relays are specified, separate them with commas. For example, random:(http://relay1:20080,http://relay2:20080) |  |
+| CODESTATION_URI | | Configuration data if the agent is using a relay, in the form https://relay1:20081. | |
+| SERVER_URI |  | UCD server URI. If multiple servers are specified, separate them with commas. For example, random:(wss://ucd1.example.com:7919,wss://ucd2.example.com:7919) |  |
+| AGENT_NAME | | Name of the agent | |
+| AGENT_TEAMS |  | Teams to add this agent to when it connects to the UCD server.Format is <team>:<type>. Multiple team specifications are separated with a comma. |  |
 
 ## Storage
 See the Prerequisites section of this page for storage information.
